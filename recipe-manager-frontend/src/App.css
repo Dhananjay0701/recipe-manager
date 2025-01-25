@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: bisque;
 }
 
 .App-logo {
@@ -28,6 +29,39 @@
   color: #61dafb;
 }
 
+.Big-button {
+
+  width: 250px;
+  height: 250px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  /* background-image: url('./static/spaget.JPG') */;
+}
+
+
+.Big-button:hover {
+  border: 3px solid rgb(65, 187, 235); /* Add a blue border on hover */
+}
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto); /* 4 buttons per row */
+  gap: 15px 10px; /* Spacing between buttons */
+  margin-top: 300px;
+  margin-left: 375px;
+  margin-right: 80px;
+  justify-content:space-between;/* Padding for the grid */
+}
+
+/* Individual buttons */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
