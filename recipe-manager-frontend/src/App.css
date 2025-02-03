@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Yrsa:ital,wght@0,300..700;1,300..700&display=swap');
 .App {
   text-align: center;
   background-color: bisque;
@@ -30,8 +31,8 @@
 }
 
 .Big-button {
-
-  width: 250px;
+  position: relative;
+  width: 200px;
   height: 250px;
   border-radius: 8px;
   background-size: cover;
@@ -43,30 +44,390 @@
   color: white;
   font-size: 18px;
   font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.01); /* Semi-transparent overlay */
+  background-blend-mode: overlay;
   cursor: pointer;
   /* background-image: url('./static/spaget.JPG') */;
 }
 
-
-.Big-button:hover {
-  border: 3px solid rgb(65, 187, 235); /* Add a blue border on hover */
+.Big-button:hover{
+  background-color: rgba(0, 0, 0, 0.6) /* Apply the opacity when hovering */
 }
+
 .recipe-grid {
   display: grid;
-  grid-template-columns: repeat(4, auto); /* 4 buttons per row */
-  gap: 15px 10px; /* Spacing between buttons */
-  margin-top: 300px;
-  margin-left: 375px;
-  margin-right: 80px;
-  justify-content:space-between;/* Padding for the grid */
+  grid-template-columns: repeat(4, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 20px auto;
+  max-width: 57%;
 }
 
-/* Individual buttons */
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Top-bar{
+  background-color:rgb(20,24,28);
+  width: 100%;
+  height: 75px;
+  margin-top: -20px;
+  overflow: scroll;
+}
+
+.Top-bar .User-acc {
+  width: 60px;
+  height: 60px;
+  margin-left: 1105px;
+  margin-top: -41px;
+  background: transparent;
+  border: none;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  background-image: url('../public/static/user_logo.png');}
+
+.Top-bar .User-text{
+  font-weight: Bold;
+  border: 0;
+  color: #99AABB;
+  margin-left: 1155px;
+  margin-top: -44px;
+  background: transparent;
+  display: flex;
+  font-size: 20px;
+}
+
+
+.Add-recipe {
+  margin-left: 1000px;
+  margin-top: -24px;
+  width: 100px; /* Adjusted width for better space */
+  height: 23px; /* Adjusted height for better visibility */
+  border: none;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center; /* Vertically aligns content */
+  justify-content: flex-start; /* Centers content inside the button */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size:11px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #00ac1c;
+  color: white;
+}
+
+p.Add-p {
+  display: flex; /* Ensures the "+" behaves like inline text */
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+  margin-right: 5px;
+  margin-left: -7px;
+  padding-bottom: 4px; /* Remove unnecessary padding */
+}
+
+.Add-recipe:hover{
+  background-color: #00a01c;
+}
+
+
+.Dairy {
+  margin-left: 960px;
+  margin-top: -25px;
+  font-weight: bold;
+  width: 30px;
+  height: 25px;
+  border: none;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  color: #99AABB;}
+
+
+.Dairy:hover{
+  color: white;
+}
+
+
+.All-recipes {
+  margin-left: 823px;
+  margin-top: -28px;
+  font-weight: bold;
+  width: 120px;
+  height: 25px;
+  border: none;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  color: #99AABB;}
+
+
+.All-recipes:hover{
+  color: white;
+}
+
+.Top-bar .Logo-tag {
+  width: 90px;
+  height: 70px;
+  background: transparent;
+  border: none;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 300px;
+  margin-top: 5px;
+  background-image: url('../public/static/logo_ramne.png');
+}
+
+.Top-bar .Logo-name{
+  font-family: Georgia, serif;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  margin-left: 375px;
+  color: white;
+  border: none;
+  margin-top: -45px;
+  background: transparent;
+}
+
+.search {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 700px;
+  align-items: center;
+  margin-top: -30px;
+}
+
+.Search-input{
+  height: 10px;
+  background-color: transparent; /* Transparent background to match the gradient */
+  color: #fff; /* White text to contrast with the dark background */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Subtle border to make it visible */
+  padding: 10px;
+  border-radius: 5px; /* Rounded corners */
+  outline: none; /* Remove the default focus outline */ /* Adjust as needed */
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.Banner-text{
+  font-family: "Yrsa", serif;
+  font-weight: 400;
+  position:absolute;
+  display: flex;
+  font-size: 28px;
+  margin-top: 200px;
+  width: 57%;
+  height: 40px;
+  margin-left:320px;
+  align-items: center;
+  justify-content: center;
+  color: #a4abb2;
+}
+
+
+
+.BannerImg{
+  position:absolute;
+  display: flex;
+  font-size: 28px;
+  margin-top: 40px;
+  width: 57%;
+  height: 140px;
+  margin-left:320px;
+  /*background-image: url('../public/static/yir-banner-1900-o.png');*/ 
+  background-color: #dfbdd3;
+  align-items: center;
+  justify-content: center;
+  color: #a4abb2;
+}
+
+span.Bt-span{
+  color: white;
+  text-decoration: underline;
+  text-decoration-color:#7a838d;
+  margin-left: 7px;
+}
+
+.Big-button:hover .hover-text {
+  font-size: calc(1.5rem - 0.2vw); /* Adjust font size dynamically on hover */
+  max-height: 2.4em; /* Still ensure it fits in two lines */
+  overflow: hidden; /* Prevent spillover */
+}
+
+.Big-button .hover-text {
+  position: absolute;
+  bottom: 25px; /* Place text near the bottom */
+  left: 10px; /* Add a small offset */
+  right: 10px; /* Add a small offset */
+  font-size: calc(1rem); /* Default font size */
+  line-height: 1.2; /* Line height for readability */
+  text-align: center; /* Center align the text */
+  color: white;
+  background: transparent; /* Background for better contrast */
+  padding: 5px 10px; /* Padding for spacing */
+  border-radius: 4px; /* Rounded corners */
+  max-height: 2.4em; /* Maximum height for two lines of text */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Add "..." for overflow */
+  white-space: nowrap; /* Ensure text fits on one or two lines */
+  z-index: 2; /* Ensure visibility over background */
+}
+.Big-button .hover-image{
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  height: 150px;
+  width: 150px;
+  top:-10px; /* Place text near the bottom */
+  left: 50%; /* Start positioning from the center horizontally */
+  transform: translateX(-50%); /* Adjust back by 50% of its own width */
+  background-image: url('../public/static/calendar_gpt_final.png');
+  padding-left: 8px;
+  padding-top: 15px;
+
+  background-size: cover;
+}
+.Big-button .hover-date {
+  width: 70px;
+  height: 70px;
+  font-family: Courier, monospace;
+  font-weight: bold;
+  position: absolute;
+  display: flex;
+  text-align: center;
+  top: 55px;
+  left: 52%; /* Start positioning from the center horizontally */
+  transform: translateX(-50%); 
+  color: rgb(18, 17, 20);
+  font-size : 16px;
+}
+
+.Big-button .hover-rating {
+  width: 150px;
+  left: 55%;
+  position: absolute;
+  top: 52%; /* Start positioning from the center horizontally */
+  transform: translateY(-50%); 
+  transform: translateX(-50%); 
+  display: flex;
+  text-align: left;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  width: 57%;
+  margin: 0 auto;
+  margin-top: 250px;
+}
+
+.hr-1, .hr-2 {
+  color: #445566;
+  border: 0;
+  border-top: 1px solid #445566;
+  width: 100%;
+  margin: 0;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  gap: 10px;
+  padding-right: 40px;
+}
+
+button {
+  width: fit-content;
+  height: 25px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  color: #99AABB;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  position: relative;
+}
+
+.icon {
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.sby-icon {
+  font-size: 12px;
+  margin-left: 5px;
+  margin-left: 30px; /* Add 30px space ONLY for Sort by icon */
+}
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  
+}
+
+
+/* Dropdown content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #222;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.dropdown-content {
+  color: #99AABB;
+  padding: 8px 12px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #333;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
 }
