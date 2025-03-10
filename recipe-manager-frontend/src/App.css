@@ -1,7 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Yrsa:ital,wght@0,300..700;1,300..700&display=swap');
+
+/* CSS Variables */
+:root {
+  --primary-bg: bisque;
+  --dark-bg: #282c34;
+  --topbar-bg: rgb(20, 24, 28);
+  --text-light: white;
+  --text-muted: #99AABB;
+  --accent-green: #00ac1c;
+  --accent-hover: #00a01c;
+  --border-color: rgba(255, 255, 255, 0.3);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --content-width: 57%;
+}
+
 .App {
   text-align: center;
-  background-color: bisque;
+  background-color: var(--primary-bg);
 }
 
 .App-logo {
@@ -16,14 +31,14 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: var(--dark-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: var(--text-light);
 }
 
 .App-link {
@@ -40,8 +55,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: white;
+  box-shadow: var(--shadow);
+  color: var(--text-light);
   font-size: 18px;
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.01); /* Semi-transparent overlay */
@@ -56,185 +71,163 @@
 
 .recipe-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 15px;
   margin: 20px auto;
-  max-width: 57%;
+  max-width: var(--content-width);
 }
 
-.Top-bar{
-  background-color:rgb(20,24,28);
+/* Top Navigation Bar */
+.Top-bar {
+  background-color: var(--topbar-bg);
   width: 100%;
   height: 75px;
-  margin-top: -20px;
-  overflow: scroll;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-sizing: border-box;
+  margin-top: 0;
 }
 
-.Top-bar .User-acc {
+/* Logo section */
+.Logo-section {
+  display: flex;
+  align-items: center;
+  margin-left: 275px;
+}
+
+.Logo-tag {
   width: 60px;
-  height: 60px;
-  margin-left: 1105px;
-  margin-top: -41px;
+  height: 100px;
   background: transparent;
   border: none;
-  background-size: cover;
+  background-size: cover;  /* ensures image fills the container */
   background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-size: 18px;
-  font-weight: bold;
+  background-repeat: no-repeat;
   cursor: pointer;
-  background-image: url('../public/static/user_logo.png');}
-
-.Top-bar .User-text{
-  font-weight: Bold;
-  border: 0;
-  color: #99AABB;
-  margin-left: 1155px;
-  margin-top: -44px;
-  background: transparent;
-  display: flex;
-  font-size: 20px;
-}
-
-
-.Add-recipe {
-  margin-left: 1000px;
-  margin-top: -24px;
-  width: 100px; /* Adjusted width for better space */
-  height: 23px; /* Adjusted height for better visibility */
-  border: none;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center; /* Vertically aligns content */
-  justify-content: flex-start; /* Centers content inside the button */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-size:11px;
-  font-weight: bold;
-  cursor: pointer;
-  background-color: #00ac1c;
-  color: white;
-}
-
-p.Add-p {
-  display: flex; /* Ensures the "+" behaves like inline text */
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: white;
-  margin-right: 5px;
-  margin-left: -7px;
-  padding-bottom: 4px; /* Remove unnecessary padding */
-}
-
-.Add-recipe:hover{
-  background-color: #00a01c;
-}
-
-
-.Dairy {
-  margin-left: 960px;
-  margin-top: -25px;
-  font-weight: bold;
-  width: 30px;
-  height: 25px;
-  border: none;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  font-size: 13px;
-  cursor: pointer;
-  background: transparent;
-  color: #99AABB;}
-
-
-.Dairy:hover{
-  color: white;
-}
-
-
-.All-recipes {
-  margin-left: 823px;
-  margin-top: -28px;
-  font-weight: bold;
-  width: 120px;
-  height: 25px;
-  border: none;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  font-size: 13px;
-  cursor: pointer;
-  background: transparent;
-  color: #99AABB;}
-
-
-.All-recipes:hover{
-  color: white;
-}
-
-.Top-bar .Logo-tag {
-  width: 90px;
-  height: 70px;
-  background: transparent;
-  border: none;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: 300px;
-  margin-top: 5px;
   background-image: url('../public/static/logo_ramne.png');
 }
 
-.Top-bar .Logo-name{
+.Logo-name {
   font-family: Georgia, serif;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-size: 24px;
   font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  margin-left: 375px;
-  color: white;
+  color: var(--text-light);
   border: none;
-  margin-top: -45px;
   background: transparent;
+  cursor: pointer;
 }
 
-.search {
-  flex-grow: 1;
+/* New center-section wrapping search bar and nav-links */
+.Center-section {
   display: flex;
-  justify-content: flex-end;
-  margin-right: 700px;
   align-items: center;
-  margin-top: -30px;
 }
 
-.Search-input{
-  height: 10px;
-  background-color: transparent; /* Transparent background to match the gradient */
-  color: #fff; /* White text to contrast with the dark background */
-  border: 1px solid rgba(255, 255, 255, 0.5); /* Subtle border to make it visible */
-  padding: 10px;
-  border-radius: 5px; /* Rounded corners */
-  outline: none; /* Remove the default focus outline */ /* Adjust as needed */
-  font-size: 16px;
+/* Search bar */
+.search {
+  flex: 1;
+  max-width: 190px; /* Keep the width the same */
+  margin: 0 0 0 -10px; /* Shift 5px to the left */
+}
+
+.Search-input {
+  height: 8px;
+  background-color: rgba(34, 38, 42, 0.8);
+  color: var(--text-light);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
   transition: border-color 0.3s ease;
+}
+
+.Search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.Search-input:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(34, 38, 42, 1);
+}
+
+/* Navigation links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0; /* no gap between search end and nav-links start */
+  margin-left: 30px;
+}
+
+.All-recipes, .Dairy {
+  padding-left: 0 10px;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.All-recipes:hover, .Dairy:hover {
+  color: var(--text-light);
+}
+
+/* Add recipe button */
+.Add-recipe {
+  margin-left: 10px;
+  height: 25px;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: var(--accent-green);
+  color: var(--text-light);  /* slight separation from other nav buttons */
+}
+
+.Add-recipe:hover {
+  background-color: var(--accent-hover);
+}
+
+.Add-p {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--text-light);
+  margin: 0 5px 0 0;
+  padding: 0;
+}
+
+/* User section */
+.User-section {
+  display: flex;
+  align-items: center;
+  margin-right: 300px;
+}
+
+.User-acc {
+  width: 40px;
+  height: 60px;
+  background: transparent;
+  border: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-image: url('../public/static/user_logo.png');
+}
+
+.User-text {
+  font-weight: bold;
+  border: 0;
+  color: var(--text-muted);
+  background: transparent;
+  font-size: 18px;
 }
 
 .Banner-text{
@@ -262,15 +255,14 @@ p.Add-p {
   width: 57%;
   height: 140px;
   margin-left:320px;
-  /*background-image: url('../public/static/yir-banner-1900-o.png');*/ 
-  background-color: #dfbdd3;
+  background-image: url('../public/static/yir-banner-1900-o.png');
   align-items: center;
   justify-content: center;
   color: #a4abb2;
 }
 
 span.Bt-span{
-  color: white;
+  color: var(--text-light);
   text-decoration: underline;
   text-decoration-color:#7a838d;
   margin-left: 7px;
@@ -290,7 +282,7 @@ span.Bt-span{
   font-size: calc(1rem); /* Default font size */
   line-height: 1.2; /* Line height for readability */
   text-align: center; /* Center align the text */
-  color: white;
+  color: var(--text-light);
   background: transparent; /* Background for better contrast */
   padding: 5px 10px; /* Padding for spacing */
   border-radius: 4px; /* Rounded corners */
@@ -348,9 +340,8 @@ span.Bt-span{
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  width: 57%;
-  margin: 0 auto;
-  margin-top: 250px;
+  width: var(--content-width);
+  margin: 250px auto 0;
 }
 
 .hr-1, .hr-2 {
@@ -377,7 +368,7 @@ button {
   font-size: 13px;
   cursor: pointer;
   background: transparent;
-  color: #99AABB;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -392,7 +383,6 @@ button {
 
 .sby-icon {
   font-size: 12px;
-  margin-left: 5px;
   margin-left: 30px; /* Add 30px space ONLY for Sort by icon */
 }
 
@@ -414,6 +404,8 @@ button {
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1;
   border-radius: 4px;
+  color: var(--text-muted);
+  padding: 8px 12px;
 }
 
 .dropdown-content {

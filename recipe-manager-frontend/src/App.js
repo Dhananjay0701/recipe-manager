@@ -1,12 +1,16 @@
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import ToggleSwitch from "./components/ToggleSwitch/ToggleSwitch"
 import ScrollableComponent from "./components/ScrollableComponent/ScrollableComponent"
 import "./App.css";
 import StarRating from "./components/StarRating/StarRating";
+import AddRecipeModal from "./components/AddRecipeModal/AddRecipeModal";
+import RecipeDetail from "./components/RecipeDetail/RecipeDetail";
 
 
 export function RecipeButton({ images}){
     const [hoveredImage, setHoveredImage] = useState(null);
+    const navigate = useNavigate();
 
     const handleMouseEnter = (id) => {
       setHoveredImage(id);
@@ -15,6 +19,11 @@ export function RecipeButton({ images}){
     const handleMouseLeave = () => {
       setHoveredImage(null);
     };  
+
+    const handleRecipeClick = (recipe) => {
+        navigate(`/${recipe.Name}`);
+    };
+
     return (
     <div className="recipe-grid">
         {images.map((image, index) => (
@@ -25,7 +34,8 @@ export function RecipeButton({ images}){
                     backgroundImage: `url(/static/${image.Image_path})`,
                 }}
                 onMouseEnter={() => handleMouseEnter(image.id)}
-                onMouseLeave={handleMouseLeave}>
+                onMouseLeave={handleMouseLeave}
+                onClick={() => handleRecipeClick(image)}>
                 {hoveredImage === image.id && (
                 <div className="hover-all">
                     <div className="hover-text">{String(image.Name).charAt(0).toUpperCase() + String(image.Name).slice(1)}</div>
@@ -38,29 +48,48 @@ export function RecipeButton({ images}){
         ))}
     </div>
     );
-  };
+};
 
 export function TopBar(){
+    const [showModal, setShowModal] = useState(false);
+    
+    const handleAddRecipeClick = () => {
+        setShowModal(true);
+    };
+    
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+    
     return (
         <div className="Top-bar">
-            <div className="Topbar-elements">
+            <div className="Logo-section">
                 <button className="Logo-tag"></button>
-                <button className = 'Logo-name'>BroIsCooked</button>
-                <div class="search">
-                    <input
-                        type="text"
-                        className="Search-input"
-                        placeholder="Search here..."
-                    />
-                </div>
+                <button className="Logo-name">BroIsCooked</button>
+            </div>
+            
+            <div className="search">
+                <input 
+                    className="Search-input" 
+                    type="text" 
+                    placeholder="Search recipe" 
+                />
+            </div>
+            
+            <div className="nav-links">
                 <button className="All-recipes">ALL-RECIPES</button>
                 <button className="Dairy">DAIRY</button>
-                <button className="Add-recipe"><p className="Add-p">+</p>ADD RECIPE</button>
-                <div className="User-details">
-                    <button className="User-acc"></button>
-                    <button className="User-text">DT</button>
-                </div>
+                <button className="Add-recipe" onClick={handleAddRecipeClick}>
+                    <p className="Add-p">+</p>ADD RECIPE
+                </button>
             </div>
+            
+            <div className="User-section">
+                <button className="User-acc"></button>
+                <button className="User-text">DT</button>
+            </div>
+            
+            {showModal && <AddRecipeModal onClose={handleCloseModal} onAddRecipe={() => window.location.reload()} />}
         </div>
     )
 }
@@ -114,25 +143,56 @@ export function FilterBar() {
 }
 
 
-const imagePaths = [
-    {'id' : 1,"Name": "Spaghetti al pomodoro", "Image_path" : "spagethi_phone.webp", 'date': "20 Jan 2024", 'Rating': 4},
-    {'id' : 2,"Name": "pizza", "Image_path" : "pizza.jpeg", 'date': "02 Feb 2024", 'Rating': 4.5},
-    {'id' : 3,"Name": "Foccacia", "Image_path" : "Roasted-Tomato-and-Olive-Focaccia-Bread-2.jpg", 'date': "21 Mar 2024", 'Rating': 4.5},
-    {'id' : 4,"Name": "Sourdough", "Image_path" : "sourdough-bread-round-1-of-1.webp", 'date': "15 Apr 2024", 'Rating': 3},
-    {'id' : 5,"Name": "Spaghetti alio e olio", "Image_path" : "spaghetti-aglio-e-olio-close-up-800x1200.jpg", 'date': "20 Jan 2024", 'Rating': 2},
-    {'id' : 6,"Name": "Brownie", "Image_path" : "Chocolate-Brownie-Recipe-5.jpg", 'date': "31 Jan 2024", 'Rating': 3},
-    {'id' : 7,"Name": "Chole", "Image_path" : "chole-masala-recipe27.jpg", 'date': "20 Jan 2024", 'Rating': 4},
-    {'id' : 8,"Name": "Sev tamatar", "Image_path" : "sev-tameta-nu-shaak.jpg", 'date': "20 Jan 2024", 'Rating': 4.5},
-    {'id' : 9,"Name": "Cinnamon Role", "Image_path" : "Perfect-Cinnamon-Rolls-10-1067x1600.jpg", 'date': "20 Jan 2024", 'Rating': 3.5},
-    ];
-
-export default function Home(){
-    return <div>
-        <TopBar/>
-        <BannerText/>
-        <FilterBar/>
-        <RecipeButton
-        images={imagePaths}/>
-        </div>;
+export default function App() {
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    
+    const fetchRecipes = () => {
+        fetch('http://localhost:5001/api/recipes')
+            .then(response => response.json())
+            .then(data => {
+                setRecipes(data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching recipes:', error);
+                setLoading(false);
+            });
+    };
+    
+    useEffect(() => {
+        fetchRecipes();
+        
+        // Listen for recipe updates
+        const handleRecipeUpdate = () => {
+            fetchRecipes();
+        };
+        
+        window.addEventListener('recipe-updated', handleRecipeUpdate);
+        
+        return () => {
+            window.removeEventListener('recipe-updated', handleRecipeUpdate);
+        };
+    }, []);
+    
+    return (
+        <Router>
+            <TopBar />
+            <Routes>
+                <Route path="/" element={
+                    <>
+                        <BannerText />
+                        <FilterBar />
+                        {loading ? (
+                            <div className="loading">Loading recipes...</div>
+                        ) : (
+                            <RecipeButton images={recipes}/>
+                        )}
+                    </>
+                } />
+                <Route path="/:recipeName" element={<RecipeDetail recipes={recipes} />} />
+            </Routes>
+        </Router>
+    );
 }
 
