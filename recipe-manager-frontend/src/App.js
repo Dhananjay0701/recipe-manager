@@ -1,11 +1,10 @@
 import { use, useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
-import ToggleSwitch from "./components/ToggleSwitch/ToggleSwitch"
-import ScrollableComponent from "./components/ScrollableComponent/ScrollableComponent"
 import "./App.css";
 import StarRating from "./components/StarRating/StarRating";
 import AddRecipeModal from "./components/AddRecipeModal/AddRecipeModal";
 import RecipeDetail from "./components/RecipeDetail/RecipeDetail";
+import API_URL from './api/config';
 
 
 export function RecipeButton({ images}){
@@ -146,9 +145,9 @@ export function FilterBar() {
 export default function App() {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+    console.log(API_URL);
     const fetchRecipes = () => {
-        fetch('http://localhost:5001/api/recipes')
+        fetch(`${API_URL}/recipes`)
             .then(response => response.json())
             .then(data => {
                 setRecipes(data);

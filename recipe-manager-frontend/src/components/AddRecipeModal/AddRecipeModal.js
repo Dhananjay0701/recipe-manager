@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './AddRecipeModal.css';
 import StarRating from '../StarRating/StarRating';
+import API_URL from '../../api/config';
 
 const AddRecipeModal = ({ onClose, onAddRecipe }) => {
   const [recipeName, setRecipeName] = useState('');
@@ -70,7 +71,7 @@ const AddRecipeModal = ({ onClose, onAddRecipe }) => {
         console.log(pair[0], pair[1]);
       }
       
-      const response = await fetch('http://localhost:5001/api/recipes', {
+      const response = await fetch(`${API_URL}/recipes`, {
         method: 'POST',
         body: formData,
       });

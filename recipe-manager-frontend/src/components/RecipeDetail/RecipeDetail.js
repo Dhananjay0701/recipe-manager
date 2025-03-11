@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import StarRating from '../StarRating/StarRating';
 import './RecipeDetail.css';
+import API_URL from '../../api/config';
 
 const RecipeDetail = ({ recipes }) => {
     const { recipeName } = useParams();
@@ -29,7 +30,7 @@ const RecipeDetail = ({ recipes }) => {
         }
 
         // If not found or recipes not loaded, fetch from API
-        fetch(`http://localhost:5001/api/recipes/${recipeName}`)
+        fetch(`${API_URL}/recipes/${recipeName}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Recipe not found');
@@ -54,7 +55,7 @@ const RecipeDetail = ({ recipes }) => {
         
         // Ensure the rating is a number
         const numericRating = parseFloat(newRating);
-        fetch(`http://localhost:5001/api/recipes/${recipe.id}/rating`, {
+        fetch(`${API_URL}/recipes/${recipe.id}/rating`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ const RecipeDetail = ({ recipes }) => {
     const saveRecipeText = () => {
         if (!recipe) return;
         
-        fetch(`http://localhost:5001/api/recipes/${recipe.id}/text`, {
+        fetch(`${API_URL}/recipes/${recipe.id}/text`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -110,7 +111,7 @@ const RecipeDetail = ({ recipes }) => {
         setIngredients(updatedIngredients);
         if (!recipe) return;
         
-        fetch(`http://localhost:5001/api/recipes/${recipe.id}/ingredients`, {
+        fetch(`${API_URL}/recipes/${recipe.id}/ingredients`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -135,7 +136,7 @@ const RecipeDetail = ({ recipes }) => {
         console.log('Sending ingredients update for recipe ID:', recipe.id);
         console.log('Updated ingredients:', updatedIngredients);
         
-        fetch(`http://localhost:5001/api/recipes/${recipe.id}/ingredients`, {
+        fetch(`${API_URL}/recipes/${recipe.id}/ingredients`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -165,7 +166,7 @@ const RecipeDetail = ({ recipes }) => {
         const updatedIngredients = [...ingredients];
         updatedIngredients.splice(index, 1);
         
-        fetch(`http://localhost:5001/api/recipes/${recipe.id}/ingredients`, {
+        fetch(`${API_URL}/recipes/${recipe.id}/ingredients`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -192,7 +193,7 @@ const RecipeDetail = ({ recipes }) => {
         
         const updatedLinks = [...links, newLink];
         
-        fetch(`http://localhost:5001/api/recipes/${recipe.id}/links`, {
+        fetch(`${API_URL}/recipes/${recipe.id}/links`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -221,7 +222,7 @@ const RecipeDetail = ({ recipes }) => {
         const updatedLinks = [...links];
         updatedLinks.splice(index, 1);
         
-        fetch(`http://localhost:5001/api/recipes/${recipe.id}/links`, {
+        fetch(`${API_URL}/recipes/${recipe.id}/links`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
