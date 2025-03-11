@@ -6,7 +6,13 @@
     "date": "11 Mar 2025",
     "Rating": 4,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [
+      {
+        "name": "Imli",
+        "checked": false
+      }
+    ],
+    "links": []
   },
   {
     "id": 1,
@@ -36,6 +42,11 @@
         "name": "Tomato",
         "checked": false
       }
+    ],
+    "links": [
+      "https://www.google.com",
+      "https://www.youtube.com",
+      "https://www.facebook.com"
     ]
   },
   {
@@ -45,7 +56,8 @@
     "date": "02 Feb 2024",
     "Rating": 4,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [],
+    "links": []
   },
   {
     "id": 3,
@@ -54,7 +66,8 @@
     "date": "21 Mar 2024",
     "Rating": 4.5,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [],
+    "links": []
   },
   {
     "id": 4,
@@ -63,7 +76,8 @@
     "date": "15 Apr 2024",
     "Rating": 3,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [],
+    "links": []
   },
   {
     "id": 5,
@@ -72,7 +86,8 @@
     "date": "20 Jan 2024",
     "Rating": 2,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [],
+    "links": []
   },
   {
     "id": 6,
@@ -81,7 +96,8 @@
     "date": "31 Jan 2024",
     "Rating": 3,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [],
+    "links": []
   },
   {
     "id": 7,
@@ -90,7 +106,8 @@
     "date": "20 Jan 2024",
     "Rating": 4,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [],
+    "links": []
   },
   {
     "id": 8,
@@ -99,7 +116,8 @@
     "date": "20 Jan 2024",
     "Rating": 4.5,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [],
+    "links": []
   },
   {
     "id": 9,
@@ -108,6 +126,17 @@
     "date": "20 Jan 2024",
     "Rating": 3.5,
     "recipeText": "",
-    "ingredients": []
+    "ingredients": [],
+    "links": []
+  },
+  {
+    "id": 1741681785885,
+    "Name": "Tomato Sauce",
+    "Image_path": "1741681785879-396482570.jpeg",
+    "date": "11 Mar 2025",
+    "Rating": 4.5,
+    "recipeText": "",
+    "ingredients": [],
+    "links": []
   }
 ]

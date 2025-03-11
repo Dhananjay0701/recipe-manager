@@ -171,8 +171,8 @@ app.put('/api/recipes/:id/text', (req, res) => {
 // PUT endpoint to update recipe ingredients
 app.put('/api/recipes/:id/ingredients', (req, res) => {
   try {
-    console.log('Received ingredients update request for ID:', req.params.id);
-    console.log('Request body:', req.body);
+    //console.log('Received ingredients update request for ID:', req.params.id);
+    //console.log('Request body:', req.body);
     
     const { ingredients } = req.body;
     if (!ingredients || !Array.isArray(ingredients)) {
@@ -191,7 +191,7 @@ app.put('/api/recipes/:id/ingredients', (req, res) => {
       return res.status(404).json({ message: 'Recipe not found' });
     }
     
-    console.log(`Updating ingredients for recipe ${recipes[recipeIndex].Name}:`, ingredients);
+    //console.log(`Updating ingredients for recipe ${recipes[recipeIndex].Name}:`, ingredients);
     recipes[recipeIndex].ingredients = ingredients;
     saveRecipes(recipes);
     
@@ -230,12 +230,12 @@ app.put('/api/recipes/:id/links', (req, res) => {
 // Modify the POST endpoint to add a new recipe with optional recip se text and ingredients
 app.post('/api/recipes', upload.single('image'), (req, res) => {
   try {
-    console.log('Received recipe data:', req.body);
-    console.log('Received file:', req.file);
+    //console.log('Received recipe data:', req.body);
+    //console.log('Received file:', req.file);
     
     const { name, rating, recipeText } = req.body;
     let ingredients = [];
-    
+    let links = [];
     // Parse ingredients if provided
     if (req.body.ingredients) {
       try {
@@ -244,10 +244,17 @@ app.post('/api/recipes', upload.single('image'), (req, res) => {
         console.error('Invalid ingredients format:', err);
       }
     }
+    if (req.body.links) {
+        try {
+          links = JSON.parse(req.body.links);
+        } catch (err) {
+          console.error('Invalid ingredients format:', err);
+        }
+      }
     
     // Validate input
     if (!name || !rating) {
-      console.log('Missing required fields:', { name, rating });
+      //console.log('Missing required fields:', { name, rating });
       return res.status(400).json({ message: 'Name and rating are required' });
     }
     
@@ -270,7 +277,8 @@ app.post('/api/recipes', upload.single('image'), (req, res) => {
       date: date,
       Rating: parseFloat(rating),
       recipeText: recipeText || '',
-      ingredients: ingredients || []
+      ingredients: ingredients || [],
+      links: links || []
     };
 
     // Add to recipes

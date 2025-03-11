@@ -17,7 +17,7 @@
 }
 
 .back-button:hover {
-    background-color: #f0f0f0;
+    background-color: #000000;
 }
 
 .recipe-title {
@@ -68,6 +68,8 @@
 }
 
 .recipe-instructions textarea {
+    background-color: #343A48;
+    color: white;
     width: 100%;
     min-height: 200px;
     padding: 12px;
