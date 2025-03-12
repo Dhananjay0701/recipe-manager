@@ -1,4 +1,4 @@
-import { use, useState, useEffect } from "react";
+import React, { use, useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import "./App.css";
 import StarRating from "./components/StarRating/StarRating";
@@ -141,6 +141,33 @@ export function FilterBar() {
   );
 }
 
+// Add this class above your App component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("React Error Boundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', color: 'white', textAlign: 'center' }}>
+          <h2>Something went wrong.</h2>
+          <p>Error: {this.state.error?.toString()}</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function App() {
     const [recipes, setRecipes] = useState([]);
@@ -175,23 +202,25 @@ export default function App() {
     }, []);
     
     return (
-        <Router>
-            <TopBar />
-            <Routes>
-                <Route path="/" element={
-                    <>
-                        <BannerText />
-                        <FilterBar />
-                        {loading ? (
-                            <div className="loading">Loading recipes...</div>
-                        ) : (
-                            <RecipeButton images={recipes}/>
-                        )}
-                    </>
-                } />
-                <Route path="/:recipeName" element={<RecipeDetail recipes={recipes} />} />
-            </Routes>
-        </Router>
+        <ErrorBoundary>
+            <Router>
+                <TopBar />
+                <Routes>
+                    <Route path="/" element={
+                        <>
+                            <BannerText />
+                            <FilterBar />
+                            {loading ? (
+                                <div className="loading">Loading recipes...</div>
+                            ) : (
+                                <RecipeButton images={recipes}/>
+                            )}
+                        </>
+                    } />
+                    <Route path="/:recipeName" element={<RecipeDetail recipes={recipes} />} />
+                </Routes>
+            </Router>
+        </ErrorBoundary>
     );
 }
 
