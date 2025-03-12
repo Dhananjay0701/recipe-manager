@@ -1,12 +1,5 @@
-const { OpenAI } = require('openai');
-const Replicate = require('replicate');
 
-// Initialize OpenAI client
-// Note: You mentioned you'll hardcode your API key, but for security,
-// consider using environment variables in a production environment
-const openai = new OpenAI({
-  apiKey: 'r8_RWty6BytzobsRbE2uToh9zLhgi0JTbe41GRxl', // You'll add your API key here
-});
+const Replicate = require('replicate');
 
 // Initialize Replicate client
 const replicate = new Replicate({
