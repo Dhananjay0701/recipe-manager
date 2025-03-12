@@ -172,13 +172,25 @@ class ErrorBoundary extends React.Component {
 export default function App() {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
-    console.log(API_URL);
+    console.log(`${API_URL}/recipes`);
     const fetchRecipes = () => {
         fetch(`${API_URL}/recipes`)
-            .then(response => response.json())
-            .then(data => {
-                setRecipes(data);
-                setLoading(false);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text(); // First get the response as text
+            })
+            .then(text => {
+                try {
+                    const data = JSON.parse(text); // Try to parse it as JSON
+                    setRecipes(data);
+                    setLoading(false);
+                } catch (e) {
+                    console.error('Failed to parse JSON:', e);
+                    console.error('Response text:', text);
+                    throw new Error('Invalid JSON received');
+                }
             })
             .catch(error => {
                 console.error('Error fetching recipes:', error);
