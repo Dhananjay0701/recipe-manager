@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5001;
 
 // Enable CORS for frontend requests
 app.use(cors({
-  origin: 'https://broiscooked.vercel.app/', // or your frontend URL
+  origin: '*', // or your frontend URL
   credentials: true
 }));
 app.use(express.json());
