@@ -317,8 +317,8 @@ span.Bt-span{
   position: absolute;
   display: flex;
   text-align: center;
-  top: 55px;
-  left: 52%; /* Start positioning from the center horizontally */
+  top: 48px;
+  left: 50%; /* Start positioning from the center horizontally */
   transform: translateX(-50%); 
   color: rgb(18, 17, 20);
   font-size : 16px;

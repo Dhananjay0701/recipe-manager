@@ -3,12 +3,16 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
+const { extractIngredientsFromRecipe } = require('./ingridients_llm');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5001;
 
 // Enable CORS for frontend requests
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // or your frontend URL
+  credentials: true
+}));
 app.use(express.json());
 
 // Check if the upload directory exists, create it if it doesn't
@@ -40,7 +44,7 @@ const upload = multer({
     const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = fileTypes.test(file.mimetype);
     
-    if (mimetype || extname) {
+    if (mimetype && extname) {
       return cb(null, true);
     } else {
       cb(new Error(`File type not allowed. Accepted types: ${fileTypes}`));
@@ -290,6 +294,136 @@ app.post('/api/recipes', upload.single('image'), (req, res) => {
   } catch (error) {
     console.error('Error adding recipe:', error);
     res.status(500).json({ message: 'Error adding recipe', error: error.toString() });
+  }
+});
+
+// Add a new endpoint to upload photos for an existing recipe
+app.post('/api/recipes/:id/photos', upload.single('photo'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ 
+        message: 'No photo uploaded',
+        error: 'No file received'
+      });
+    }
+
+    const recipes = getRecipes();
+    const recipeIndex = recipes.findIndex(r => String(r.id) === String(req.params.id));
+    
+    if (recipeIndex === -1) {
+      return res.status(404).json({ 
+        message: 'Recipe not found',
+        error: `Recipe with ID ${req.params.id} not found`
+      });
+    }
+    
+    // Initialize photos array if it doesn't exist
+    if (!recipes[recipeIndex].photos) {
+      recipes[recipeIndex].photos = [];
+    }
+    
+    // Add the new photo to the recipe
+    recipes[recipeIndex].photos.push(req.file.filename);
+    saveRecipes(recipes);
+    
+    res.status(201).json({ 
+      message: 'Photo added successfully', 
+      photoPath: req.file.filename 
+    });
+  } catch (error) {
+    console.error('Error adding photo:', error);
+    res.status(500).json({ 
+      message: 'Error adding photo', 
+      error: error.toString(),
+      details: error.message 
+    });
+  }
+});
+
+// Add an endpoint to delete a photo
+app.delete('/api/recipes/:id/photos/:filename', (req, res) => {
+  try {
+    const recipes = getRecipes();
+    const recipeIndex = recipes.findIndex(r => String(r.id) === String(req.params.id));
+    
+    if (recipeIndex === -1) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    
+    const filename = decodeURIComponent(req.params.filename);
+    
+    // Remove the photo from the recipe
+    if (recipes[recipeIndex].photos) {
+      const photoIndex = recipes[recipeIndex].photos.indexOf(filename);
+      if (photoIndex !== -1) {
+        recipes[recipeIndex].photos.splice(photoIndex, 1);
+        
+        // Try to delete the actual file
+        try {
+          const filePath = path.join(uploadDir, filename);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        } catch (err) {
+          console.error('Error deleting photo file:', err);
+          // Continue even if file deletion fails
+        }
+        
+        saveRecipes(recipes);
+        return res.json({ message: 'Photo deleted successfully' });
+      }
+    }
+    
+    res.status(404).json({ message: 'Photo not found' });
+  } catch (error) {
+    console.error('Error deleting photo:', error);
+    res.status(500).json({ message: 'Error deleting photo', error: error.toString() });
+  }
+});
+
+// New endpoint to get all photos for a recipe
+app.get('/api/recipes/:id/photos', (req, res) => {
+  try {
+    const recipes = getRecipes();
+    const recipe = recipes.find(r => String(r.id) === String(req.params.id));
+    
+    if (!recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    
+    const photosList = recipe.photos || [];
+    res.json({ photos: photosList });
+  } catch (error) {
+    console.error('Error fetching photos:', error);
+    res.status(500).json({ message: 'Error fetching photos', error: error.toString() });
+  }
+});
+
+// POST endpoint to extract ingredients from recipe text
+app.post('/api/extract-ingredients', async (req, res) => {
+  try {
+    const { recipeText } = req.body;
+    
+    if (!recipeText) {
+      return res.status(400).json({ 
+        message: 'Recipe text is required',
+        ingredients: []
+      });
+    }
+    
+    const ingredients = await extractIngredientsFromRecipe(recipeText);
+    
+    res.json({ 
+      message: 'Ingredients extracted successfully',
+      ingredients 
+    });
+  } catch (error) {
+    console.error('Error extracting ingredients:', error);
+    res.status(500).json({ 
+      message: 'Error extracting ingredients', 
+      error: error.toString(),
+      ingredients: []
+    });
   }
 });
 

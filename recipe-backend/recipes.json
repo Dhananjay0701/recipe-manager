@@ -6,12 +6,7 @@
     "date": "11 Mar 2025",
     "Rating": 4,
     "recipeText": "",
-    "ingredients": [
-      {
-        "name": "Imli",
-        "checked": false
-      }
-    ],
+    "ingredients": [],
     "links": []
   },
   {
@@ -57,7 +52,10 @@
     "Rating": 4,
     "recipeText": "",
     "ingredients": [],
-    "links": []
+    "links": [],
+    "photos": [
+      "1741772975722-888008838.jpg"
+    ]
   },
   {
     "id": 3,
@@ -135,8 +133,57 @@
     "Image_path": "1741681785879-396482570.jpeg",
     "date": "11 Mar 2025",
     "Rating": 4.5,
-    "recipeText": "",
-    "ingredients": [],
+    "recipeText": "1. Blanch normal tomatoes (good quality)/ san marzano better\n2. Take EVOO and add garlic 2 cloves\n3. Add onion half\n4. Add tomato puree and a little bit of water\n5. Let it reduce a little \n6. Add chilli flake\n7. Add oregano\n8. Add salt\n9. Add a little bit of cornflour (optional, can try without just reduce on low heat)\n10. Add basil\n11. Add some butter if needed\n",
+    "ingredients": [
+      {
+        "name": "Normal tomatoes",
+        "checked": false
+      },
+      {
+        "name": "San Marzano tomatoes",
+        "checked": false
+      },
+      {
+        "name": "EVOO",
+        "checked": false
+      },
+      {
+        "name": "Garlic",
+        "checked": false
+      },
+      {
+        "name": "Onion",
+        "checked": false
+      },
+      {
+        "name": "Tomato puree",
+        "checked": false
+      },
+      {
+        "name": "Chilli flake",
+        "checked": false
+      },
+      {
+        "name": "Oregano",
+        "checked": false
+      },
+      {
+        "name": "Salt",
+        "checked": false
+      },
+      {
+        "name": "Cornflour",
+        "checked": false
+      },
+      {
+        "name": "Basil",
+        "checked": false
+      },
+      {
+        "name": "Butter",
+        "checked": false
+      }
+    ],
     "links": []
   }
 ]

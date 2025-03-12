@@ -14,6 +14,13 @@ const RecipeDetail = ({ recipes }) => {
     const [newIngredient, setNewIngredient] = useState('');
     const [links, setLinks] = useState([]);
     const [newLink, setNewLink] = useState('');
+    const [photos, setPhotos] = useState([]);
+    const [uploadingPhoto, setUploadingPhoto] = useState(false);
+    const fileInputRef = React.createRef();
+
+    // New state for modal image gallery
+    const [modalOpen, setModalOpen] = useState(false);
+    const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
     useEffect(() => {
         // First try to find the recipe in passed props
@@ -24,6 +31,7 @@ const RecipeDetail = ({ recipes }) => {
                 setRecipeText(found.recipeText || '');
                 setIngredients(found.ingredients || []);
                 setLinks(found.links || []);
+                setPhotos(found.photos || []);
                 setLoading(false);
                 return;
             }
@@ -42,6 +50,7 @@ const RecipeDetail = ({ recipes }) => {
                 setRecipeText(data.recipeText || '');
                 setIngredients(data.ingredients || []);
                 setLinks(data.links || []);
+                setPhotos(data.photos || []);
                 setLoading(false);
             })
             .catch(error => {
@@ -53,7 +62,6 @@ const RecipeDetail = ({ recipes }) => {
     const handleRatingChange = (newRating) => {
         if (!recipe) return;
         
-        // Ensure the rating is a number
         const numericRating = parseFloat(newRating);
         fetch(`${API_URL}/recipes/${recipe.id}/rating`, {
             method: 'PUT',
@@ -69,12 +77,8 @@ const RecipeDetail = ({ recipes }) => {
                 return response.json();
             })
             .then(data => {
-                // Update the local state with the new rating
                 setRecipe({ ...recipe, Rating: numericRating });
-                
-                // Force a refresh of the recipes in App.js to update the main page
                 window.dispatchEvent(new CustomEvent('recipe-updated'));
-                
                 console.log('Rating updated successfully');
             })
             .catch(error => {
@@ -248,6 +252,146 @@ const RecipeDetail = ({ recipes }) => {
         navigate('/');
     };
 
+    const handleAddPhotoClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handlePhotoUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file || !recipe) return;
+
+        const formData = new FormData();
+        formData.append('photo', file);
+
+        setUploadingPhoto(true);
+
+        fetch(`${API_URL}/recipes/${recipe.id}/photos`, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(async (response) => {
+                const responseClone = response.clone();
+                try {
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Failed to upload photo');
+                    }
+                    return data;
+                } catch (jsonError) {
+                    const textError = await responseClone.text();
+                    throw new Error(textError || 'Failed to upload photo');
+                }
+            })
+            .then(data => {
+                setPhotos([...photos, data.photoPath]);
+                setUploadingPhoto(false);
+                window.dispatchEvent(new CustomEvent('recipe-updated'));
+            })
+            .catch(error => {
+                console.error('Error uploading photo:', error);
+                alert(`Error uploading photo: ${error.message}`);
+                setUploadingPhoto(false);
+            });
+    };
+
+    const deletePhoto = (index) => {
+        if (!recipe) return;
+        
+        const photoToDelete = photos[index];
+        const updatedPhotos = [...photos];
+        updatedPhotos.splice(index, 1);
+        
+        fetch(`${API_URL}/recipes/${recipe.id}/photos/${encodeURIComponent(photoToDelete)}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete photo');
+                }
+                return response.json();
+            })
+            .then(() => {
+                setPhotos(updatedPhotos);
+                window.dispatchEvent(new CustomEvent('recipe-updated'));
+            })
+            .catch(error => {
+                console.error('Error deleting photo:', error);
+            });
+    };
+
+    // Modal handlers for the image gallery
+    const openModal = (index) => {
+        setCurrentPhotoIndex(index);
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+    };
+
+    const showNextPhoto = () => {
+        if (currentPhotoIndex < photos.length - 1) {
+            setCurrentPhotoIndex(currentPhotoIndex + 1);
+        }
+    };
+
+    const showPrevPhoto = () => {
+        if (currentPhotoIndex > 0) {
+            setCurrentPhotoIndex(currentPhotoIndex - 1);
+        }
+    };
+
+    const extractIngredientsFromText = () => {
+        if (!recipeText.trim() || !recipe) return;
+
+        fetch(`${API_URL}/extract-ingredients`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ recipeText }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to extract ingredients');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.ingredients && data.ingredients.length > 0) {
+                    // Merge with existing ingredients to avoid duplicates
+                    const existingNames = new Set(ingredients.map(i => i.name.toLowerCase()));
+                    const newIngredients = data.ingredients.filter(
+                        i => !existingNames.has(i.name.toLowerCase())
+                    );
+                    
+                    if (newIngredients.length > 0) {
+                        const updatedIngredients = [...ingredients, ...newIngredients];
+                        
+                        // Update ingredients in backend
+                        fetch(`${API_URL}/recipes/${recipe.id}/ingredients`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ ingredients: updatedIngredients }),
+                        })
+                            .then(response => response.json())
+                            .then(() => {
+                                setIngredients(updatedIngredients);
+                                window.dispatchEvent(new CustomEvent('recipe-updated'));
+                            })
+                            .catch(error => {
+                                console.error('Error updating ingredients:', error);
+                            });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error extracting ingredients:', error);
+            });
+    };
+
     if (loading) {
         return <div className="loading">Loading recipe...</div>;
     }
@@ -258,7 +402,9 @@ const RecipeDetail = ({ recipes }) => {
 
     return (
         <div className="recipe-detail-container">
-            <button className="back-button" onClick={handleBackClick}>← Back to Recipes</button>
+            <button className="back-button" onClick={handleBackClick}>
+                ← Back to Recipes
+            </button>
             
             <h1 className="recipe-title">
                 {String(recipe.Name).charAt(0).toUpperCase() + String(recipe.Name).slice(1)}
@@ -280,16 +426,18 @@ const RecipeDetail = ({ recipes }) => {
                                     <tr key={index}>
                                         <td>
                                             <div className="link-item">
-                                                <a href={link.startsWith('http') ? link : `https://${link}`} 
-                                                   target="_blank" 
-                                                   rel="noopener noreferrer">
+                                                <a 
+                                                    href={link.startsWith('http') ? link : `https://${link}`} 
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
                                                     {link}
                                                 </a>
                                                 <button 
                                                     className="delete-btn-link" 
                                                     onClick={() => deleteLink(index)}
                                                 >
-                                                    -
+                                                    ×
                                                 </button>
                                             </div>
                                         </td>
@@ -332,6 +480,13 @@ const RecipeDetail = ({ recipes }) => {
                             onBlur={saveRecipeText}
                             placeholder="Type your recipe instructions here..."
                         />
+                        <button 
+                            className="extract-ingredients-btn"
+                            onClick={extractIngredientsFromText}
+                            disabled={!recipeText.trim()}
+                        >
+                            Extract Ingredients
+                        </button>
                     </div>
                     
                     <div className="recipe-ingredients">
@@ -351,7 +506,7 @@ const RecipeDetail = ({ recipes }) => {
                                         className="delete-btn-ingredient" 
                                         onClick={() => deleteIngredient(index)}
                                     >
-                                        -
+                                        ×
                                     </button>
                                 </div>
                             ))}
@@ -370,6 +525,77 @@ const RecipeDetail = ({ recipes }) => {
                     </div>
                 </div>
             </div>
+            
+            <div className="photo-collage-section">
+                <h3>Photo Gallery</h3>
+                <div className="photo-collage">
+                    {photos.map((photo, index) => (
+                        <div 
+                            key={index} 
+                            className="photo-tile" 
+                            onClick={() => openModal(index)}
+                        >
+                            <img 
+                                src={`/static/${photo}`} 
+                                alt={`Recipe photo ${index + 1}`} 
+                            />
+                            <button 
+                                className="delete-photo-btn" 
+                                onClick={(e) => { 
+                                    e.stopPropagation(); 
+                                    deletePhoto(index); 
+                                }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    ))}
+                    <div 
+                        className="photo-tile add-photo-tile" 
+                        onClick={handleAddPhotoClick}
+                    >
+                        <div className="plus-sign">+</div>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            accept="image/*"
+                            onChange={handlePhotoUpload}
+                        />
+                        {uploadingPhoto && <div className="uploading-overlay">Uploading...</div>}
+                    </div>
+                </div>
+            </div>
+
+            {/* Modal for image gallery */}
+            {modalOpen && (
+                <div className="modal-overlay" onClick={closeModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close" onClick={closeModal}>×</button>
+                        <div className="modal-image-container">
+                            <img 
+                                src={`/static/${photos[currentPhotoIndex]}`} 
+                                alt={`Recipe photo ${currentPhotoIndex + 1}`} 
+                                className="modal-image"
+                            />
+                        </div>
+                        <div className="modal-controls">
+                            <button 
+                                onClick={showPrevPhoto} 
+                                disabled={currentPhotoIndex === 0}
+                            >
+                                Prev
+                            </button>
+                            <button 
+                                onClick={showNextPhoto} 
+                                disabled={currentPhotoIndex === photos.length - 1}
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
